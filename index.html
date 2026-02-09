@@ -3,11 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <title>Numbers Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+    }
+    .error {
+      animation: blink 0.2s 2;
+    }
+    @keyframes blink {
+      0% { background: red; }
+      100% { background: transparent; }
+    }
+  </style>
 </head>
 <body>
 
-  <h1>Zahl erraten</h1>
-  <p>Ich denke an eine Zahl zwischen 1 und 100</p>
+  <h1>Zahl erraten (1–100)</h1>
+  <p id="info">Du hast noch 10 Versuche</p>
+
+  <input type="number" id="guess" min="1" max="100">
+  <button onclick="check()">Raten</button>
+
+  <script>
+    let number = Math.floor(Math.random() * 100) + 1;
+    let tries = 10;
+
+    function check() {
+      const input = document.getElementById("guess");
+      const info = document.getElementById("info");
+      const value = Number(input.value);
+
+      if (!value) return;
+
+      tries--;
+
+      if (value === number) {
+        info.textContent = "Richtig! 🎉";
+        return;
+      }
+
+      document.body.classList.add("error");
+      setTimeout(() => document.body.classList.remove("error"), 200);
+
+      if (tries <= 0) {
+        info.textContent = "Verloren 😬 Zahl war: " + number;
+        return;
+      }
+
+      info.textContent =
+        (value < number ? "Höher ⬆️" : "Tiefer ⬇️") +
+        " | Versuche: " + tries;
+    }
+  </script>
 
 </body>
 </html>
