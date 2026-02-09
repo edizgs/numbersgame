@@ -4,18 +4,65 @@
   <meta charset="UTF-8">
   <title>Numbers Game</title>
   <style>
+    /* Hintergrund & Layout */
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
       text-align: center;
-      margin-top: 50px;
     }
-    input, button {
-      padding: 10px;
-      font-size: 16px;
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+      color: #00fff7;
+      text-shadow: 0 0 10px #00fff7;
     }
+
+    #info {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+      color: #fffb00;
+      text-shadow: 0 0 5px #fffb00;
+    }
+
+    input[type=number] {
+      padding: 15px;
+      font-size: 1.2em;
+      border-radius: 12px;
+      border: none;
+      width: 120px;
+      text-align: center;
+      margin-right: 10px;
+      outline: none;
+    }
+
+    button {
+      padding: 15px 25px;
+      font-size: 1.2em;
+      border-radius: 12px;
+      border: none;
+      background: #00fff7;
+      color: #000;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #00d4c9;
+      transform: scale(1.05);
+    }
+
     .error {
       animation: blink 0.2s 2;
     }
+
     @keyframes blink {
       0% { background: red; }
       100% { background: transparent; }
@@ -29,6 +76,7 @@
 
   <input type="number" id="guess" min="1" max="100">
   <button onclick="check()">Raten</button>
+  <button onclick="resetGame()">Neu starten</button>
 
   <script>
     let number = Math.floor(Math.random() * 100) + 1;
@@ -45,6 +93,7 @@
 
       if (value === number) {
         info.textContent = "Richtig! 🎉";
+        info.style.color = "#00ff00";
         return;
       }
 
@@ -53,12 +102,22 @@
 
       if (tries <= 0) {
         info.textContent = "Verloren 😬 Zahl war: " + number;
+        info.style.color = "#ff0000";
         return;
       }
 
       info.textContent =
         (value < number ? "Höher ⬆️" : "Tiefer ⬇️") +
         " | Versuche: " + tries;
+      info.style.color = "#fffb00";
+    }
+
+    function resetGame() {
+      number = Math.floor(Math.random() * 100) + 1;
+      tries = 10;
+      document.getElementById("info").textContent = "Du hast noch 10 Versuche";
+      document.getElementById("info").style.color = "#fffb00";
+      document.getElementById("guess").value = "";
     }
   </script>
 
