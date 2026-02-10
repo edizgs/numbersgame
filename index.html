@@ -35,6 +35,14 @@ body > script {
       color: #0ff; /* Cyan Neon */
       text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
     }
+    /* Spiel erstmal verstecken */
+#game, 
+#info, 
+#guess, 
+button[onclick="check()"], 
+button[onclick="resetGame()"] {
+  display: none;
+}
 
     /* Info Text */
     #info {
@@ -101,14 +109,17 @@ body > script {
   <div class="credit">erstellt von ediz © 2026 All Rights Reserved
 </div>
 </div>
-
+<div id="game">
   <h1>Zahl erraten (1–100)</h1>
   <p id="info">Du hast noch 10 Versuche</p>
 
   <input type="number" id="guess" min="1" max="100">
   <button onclick="check()">Raten</button>
   <button onclick="resetGame()">Neu starten</button>
+</div>
 
+  <h1>Zahl erraten (1–100)</h1>
+  <p id="info">Du hast noch 10 Versuche</p>
   <script>
     let number = Math.floor(Math.random() * 100) + 1;
     let tries = 10;
