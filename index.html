@@ -4,16 +4,6 @@
   <meta charset="UTF-8">
   <title>Numbers Game</title>
   <style>
-    /* Spiel erstmal verstecken */
-body > h1, 
-body > p, 
-body > input, 
-body > button[onclick], 
-body > button[onclick="resetGame()"], 
-body > script {
-  display: none;
-}
-
     /* Hintergrund & Layout */
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -35,14 +25,6 @@ body > script {
       color: #0ff; /* Cyan Neon */
       text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
     }
-    /* Spiel erstmal verstecken */
-#game, 
-#info, 
-#guess, 
-button[onclick="check()"], 
-button[onclick="resetGame()"] {
-  display: none;
-}
 
     /* Info Text */
     #info {
@@ -97,38 +79,54 @@ button[onclick="resetGame()"] {
       0% { background: red; }
       100% { background: transparent; }
     }
+
+    /* Startscreen & Spiel initial */
+    #game {
+      display: none;
+    }
+
+    .credit {
+      margin-top: 20px;
+      font-size: 0.9em;
+      color: #aaa;
+    }
   </style>
 </head>
 <body>
-  
-<div id="startscreen">
-  <h1 class="title">NumbersGame</h1>
 
-  <button id="startBtn">START</button>
+  <!-- Startscreen -->
+  <div id="startscreen">
+    <h1 class="title">NumbersGame</h1>
+    <button id="startBtn">START</button>
+    <div class="credit">erstellt von ediz © 2026 All Rights Reserved</div>
+  </div>
 
-  <div class="credit">erstellt von ediz © 2026 All Rights Reserved
-</div>
-</div>
-<div id="game">
-  <h1>Zahl erraten (1–100)</h1>
-  <p id="info">Du hast noch 10 Versuche</p>
+  <!-- Spiel -->
+  <div id="game">
+    <h1>Zahl erraten (1–100)</h1>
+    <p id="info">Du hast noch 10 Versuche</p>
+    <input type="number" id="guess" min="1" max="100">
+    <button onclick="check()">Raten</button>
+    <button onclick="resetGame()">Neu starten</button>
+  </div>
 
-  <input type="number" id="guess" min="1" max="100">
-  <button onclick="check()">Raten</button>
-  <button onclick="resetGame()">Neu starten</button>
-</div>
-
-  <h1>Zahl erraten (1–100)</h1>
-  <p id="info">Du hast noch 10 Versuche</p>
+  <!-- JavaScript -->
   <script>
+    // Startbutton klick
+    document.getElementById("startBtn").onclick = () => {
+      document.getElementById("startscreen").style.display = "none"; // Startscreen weg
+      document.getElementById("game").style.display = "block";       // Spiel sichtbar
+    };
+
+    // Spiel-Variablen
     let number = Math.floor(Math.random() * 100) + 1;
     let tries = 10;
 
+    // Spiel-Logik
     function check() {
       const input = document.getElementById("guess");
       const info = document.getElementById("info");
       const value = Number(input.value);
-
       if (!value) return;
 
       tries--;
@@ -139,6 +137,7 @@ button[onclick="resetGame()"] {
         return;
       }
 
+      // Fehler blink Effekt
       document.body.classList.add("error");
       setTimeout(() => document.body.classList.remove("error"), 200);
 
@@ -148,6 +147,7 @@ button[onclick="resetGame()"] {
         return;
       }
 
+      // Hinweis Text
       info.textContent =
         (value < number ? "Höher ⬆️" : "Tiefer ⬇️") +
         " | Versuche: " + tries;
@@ -161,19 +161,6 @@ button[onclick="resetGame()"] {
       document.getElementById("info").style.color = "#ff0";
       document.getElementById("guess").value = "";
     }
-    <script>
-  document.getElementById("startBtn").onclick = () => {
-    document.getElementById("startscreen").style.display = "none";
-    
-    // Spiel sichtbar machen
-    document.querySelector("h1").style.display = "block";
-    document.getElementById("info").style.display = "block";
-    document.getElementById("guess").style.display = "inline-block";
-    document.querySelector('button[onclick="check()"]').style.display = "inline-block";
-    document.querySelector('button[onclick="resetGame()"]').style.display = "inline-block";
-  };
-</script>
-
   </script>
 
 </body>
