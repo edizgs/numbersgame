@@ -13,7 +13,7 @@
       justify-content: center;
       height: 100vh;
       margin: 0;
-      background-color: #000; /* Schwarz */
+      background-color: #000;
       color: #fff;
       text-align: center;
     }
@@ -22,7 +22,7 @@
     h1 {
       font-size: 3em;
       margin-bottom: 20px;
-      color: #0ff; /* Cyan Neon */
+      color: #0ff;
       text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
     }
 
@@ -30,7 +30,7 @@
     #info {
       font-size: 1.5em;
       margin-bottom: 25px;
-      color: #ff0; /* Gelb Neon */
+      color: #ff0;
       text-shadow: 0 0 5px #ff0;
     }
 
@@ -80,8 +80,8 @@
       100% { background: transparent; }
     }
 
-    /* Startscreen & Spiel initial */
-    #game {
+    /* Screens initial */
+    #difficulty, #game {
       display: none;
     }
 
@@ -90,76 +90,102 @@
       font-size: 0.9em;
       color: #aaa;
     }
+
+    .difficulty-btn {
+      margin: 10px;
+    }
   </style>
 </head>
 <body>
 
   <!-- Startscreen -->
   <div id="startscreen">
-    <h1 class="title">NumbersGame</h1>
+    <h1>NumbersGame</h1>
     <button id="startBtn">START</button>
     <div class="credit">erstellt von ediz © 2026 All Rights Reserved</div>
   </div>
 
+  <!-- Schwierigkeitsauswahl -->
+  <div id="difficulty">
+    <h1>Wähle den Modus</h1>
+    <button class="difficulty-btn" data-level="easy">Einfach</button>
+    <button class="difficulty-btn" data-level="medium">Mittel</button>
+    <button class="difficulty-btn" data-level="hard">Schwer</button>
+  </div>
+
   <!-- Spiel -->
   <div id="game">
-    <h1>Zahl erraten (1–100)</h1>
-    <p id="info">Du hast noch 10 Versuche</p>
-    <input type="number" id="guess" min="1" max="100">
+    <h1>Zahl erraten</h1>
+    <p id="info"></p>
+    <input type="number" id="guess">
     <button onclick="check()">Raten</button>
     <button onclick="resetGame()">Neu starten</button>
   </div>
 
-  <!-- JavaScript -->
   <script>
+    const startBtn = document.getElementById("startBtn");
+    const difficultyScreen = document.getElementById("difficulty");
+    const gameScreen = document.getElementById("game");
+    const info = document.getElementById("info");
+    const guessInput = document.getElementById("guess");
+    let number = 0;
+    let tries = 0;
+    let maxNumber = 100;
+
     // Startbutton klick
-    document.getElementById("startBtn").onclick = () => {
-      document.getElementById("startscreen").style.display = "none"; // Startscreen weg
-      document.getElementById("game").style.display = "block";       // Spiel sichtbar
+    startBtn.onclick = () => {
+      document.getElementById("startscreen").style.display = "none";
+      difficultyScreen.style.display = "block";
     };
 
-    // Spiel-Variablen
-    let number = Math.floor(Math.random() * 100) + 1;
-    let tries = 10;
+    // Schwierigkeits-Buttons
+    document.querySelectorAll(".difficulty-btn").forEach(btn => {
+      btn.onclick = () => {
+        const level = btn.dataset.level;
+        if(level === "easy") { maxNumber = 10; tries = 3; }
+        else if(level === "medium") { maxNumber = 100; tries = 10; }
+        else if(level === "hard") { maxNumber = 1000; tries = 100; }
 
-    // Spiel-Logik
+        number = Math.floor(Math.random() * maxNumber) + 1;
+        info.textContent = `Du hast noch ${tries} Versuche`;
+        guessInput.value = "";
+
+        difficultyScreen.style.display = "none";
+        gameScreen.style.display = "block";
+      };
+    });
+
+    // Spiel Logik
     function check() {
-      const input = document.getElementById("guess");
-      const info = document.getElementById("info");
-      const value = Number(input.value);
-      if (!value) return;
+      const value = Number(guessInput.value);
+      if(!value) return;
 
       tries--;
 
-      if (value === number) {
+      if(value === number){
         info.textContent = "Richtig! 🎉";
         info.style.color = "#0f0";
         return;
       }
 
-      // Fehler blink Effekt
       document.body.classList.add("error");
       setTimeout(() => document.body.classList.remove("error"), 200);
 
-      if (tries <= 0) {
-        info.textContent = "Verloren 😬 Zahl war: " + number;
+      if(tries <= 0){
+        info.textContent = `Verloren 😬 Zahl war: ${number}`;
         info.style.color = "#f00";
         return;
       }
 
-      // Hinweis Text
-      info.textContent =
-        (value < number ? "Höher ⬆️" : "Tiefer ⬇️") +
-        " | Versuche: " + tries;
+      info.textContent = (value < number ? "Höher ⬆️" : "Tiefer ⬇️") + ` | Versuche: ${tries}`;
       info.style.color = "#ff0";
     }
 
-    function resetGame() {
-      number = Math.floor(Math.random() * 100) + 1;
-      tries = 10;
-      document.getElementById("info").textContent = "Du hast noch 10 Versuche";
-      document.getElementById("info").style.color = "#ff0";
-      document.getElementById("guess").value = "";
+    function resetGame(){
+      number = Math.floor(Math.random() * maxNumber) + 1;
+      info.textContent = `Du hast noch ${tries} Versuche`;
+      info.style.color = "#ff0";
+      guessInput.value = "";
     }
   </script>
 
